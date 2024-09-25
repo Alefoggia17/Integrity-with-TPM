@@ -2,11 +2,11 @@
 
 This repository shows how to use the Trusted Platform Module (TPM) to ensure the integrity of data, files, etc. on a Debian 10 virtual machine managed via VirtualBox. The choice of VirtualBox is motivated by the possibility of simulating the TPM.
 
-##Configuration
+## Configuration
 
 To simulate the TPM, you must enable the TPM option in the VM settings. As part of this work, we will also be using SecureBoot, so you will also need to enable the "Enable EFI" option. Once the virtual machine has been created, it is necessary to install all the tools related to the TPM.
 
-##TPM-tss
+## TPM-tss
 ### Dependencies
 To build and install the tpm2-tss software the following software packages
 are required: 
@@ -64,7 +64,7 @@ $ sudo apt -y install \
 > $ make test
 > $ make USE_VALGRIND=0 test   # optionally skip using valgrind
 > $ sudo make install          # it could be necessary to execute make install
-< ```
+> ```
 
 ### Building
 Continue with tpm2-tss:
