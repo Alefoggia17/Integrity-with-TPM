@@ -77,6 +77,8 @@ $ make -j$(nproc)
 $ sudo make install
 $ sudo usermod -aG tss tss #use root if you are root
 $ sudo ldconfig
+$ export PATH=/usr/local/bin:$PATH
+$ source ~/.bashrc
 ```
 
 ## TPM-tools
@@ -109,7 +111,7 @@ To build and install the tpm2-tools software the following software is required:
 $ sudo apt-get install autoconf automake libtool pkg-config gcc libssl-dev libcurl4-gnutls-dev python-yaml
 ```
 
-### Typical Distro Dependency Installation
+#### Typical Distro Dependency Installation
 
 Here we are going to satisfy tpm2-tools dependencies with:
 * tpm2-tss: <https://github.com/tpm2-software/tpm2-tss>
@@ -124,6 +126,12 @@ $ ./bootstrap
 $ ./configure --prefix=/usr/local 
 $ make -j$(nproc)
 $ sudo make install
+$ export PATH=/usr/local/bin:$PATH
+$ source ~/.bashrc
+```
+*Check the version*:
+```
+$ tpm2_getrandom --version
 ```
 
 ## TPM-abrmd
@@ -146,7 +154,7 @@ additional packages may be required. The tabrmd requires the GObject and
 GIO D-Bus support from glib-2.0 so please be sure you have whatever packages
 your distro provides are installed for these features.
 
-**System User & Group**
+**System User & Group** 
 `tpm2-abrmd` must run as user `tss` or `root`.
 As is common security practice we encourage *everyone* to run the `tpm2-abrmd`
 as an unprivileged user. This requires creating a user account and group to
@@ -166,7 +174,7 @@ topic however is beyond the scope of this document.
 option.
 
 
-*Obtaining the Source Code*
+**Obtaining the Source Code**
 As is always the case, you should check for packages available through your
 Linux distro before you attempt to download and build the tpm2-abrmd from
 source code directly. If you need a newer version than provided by your
@@ -274,6 +282,8 @@ $ ./configure --with-dbuspolicydir=/etc/dbus-1/system.d
 --libdir=/usr/lib64 --prefix=/usr/local
 $ make -j5
 $ sudo make install
+$ export PATH=/usr/local/bin:$PATH
+$ source ~/.bashrc
 ```
 
 > [!NOTE]
@@ -334,9 +344,6 @@ also now start the daemon when the system boots.
 > sudo systemct enable tpm2-abrmd
 > sudo systemctl status tpm2-abrmd
 > ```
-
-
-
 
 ## Clevis
 # Dependencies
