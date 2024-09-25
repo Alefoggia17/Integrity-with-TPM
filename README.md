@@ -331,7 +331,7 @@ to perform the start / stop / status operations as expected. Systemd should
 also now start the daemon when the system boots.
 
 > [!WARNING]
-> If tpm-abrmd service is not in an active state, but has errors such as "Failed to open specified TCTI device file /dev/tpm0: Permission denied " or "A dependency job for tpm2-abrmd.service failed" or "Refusing to run as a root", you can resolve the issue:
+> If tpm-abrmd service is not in an active state, but has errors such as *Failed to open specified TCTI device file /dev/tpm0: Permission denied* or *A dependency job for tpm2-abrmd.service failed* or *Refusing to run as a root*, you can resolve the issue:
 > ```
 > sudo nano /etc/systemd/system/tpm2-abrmd.service
 > ```
