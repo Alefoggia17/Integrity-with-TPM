@@ -378,6 +378,7 @@ are required:
 ```
 $ sudo apt -y update
 $ sudo apt -y install meson ninja-build build-essential libjose-dev libaudit-dev udisks2 libssl-dev desktop-file-utils pkg-config systemd dracut curl asciidoc libluksmeta-dev
+
 ```
 > [!NOTE]
 > To install jose:
