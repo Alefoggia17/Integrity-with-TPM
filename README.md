@@ -126,7 +126,7 @@ $ make -j$(nproc)
 $ sudo make install
 ```
 
-##TPM-abrmd
+## TPM-abrmd
 ### Dependencies
 To build and install the tpm2-abrmd software the following dependencies are
 required:
@@ -311,6 +311,32 @@ $ systemctl daemon-reload
 Once systemd has loaded the unit file you should be able to use `systemctl`
 to perform the start / stop / status operations as expected. Systemd should
 also now start the daemon when the system boots.
+
+> [!WARNING]
+> If tpm-abrmd service is not in an active state, but has errors such as "Failed to open specified TCTI device file /dev/tpm0: Permission denied " or "A dependency job for tpm2-abrmd.service failed" or "Refusing to run as a root", you can resolve the issue:
+> ```
+> sudo nano /etc/systemd/system/tpm2-abrmd.service
+> ```
+> Copy the *tpm2-abrmd_configuration.txt* file.
+> ```
+> sudo systemctl daemon-reload
+> sudo systemct start tpm2-abrmd
+> sudo systemct enable tpm2-abrmd
+> sudo systemctl status tpm2-abrmd
+> ```
+
+> [!NOTE]
+> If you still encounter errors related to running as root, use the option *--allow-root* and copy the *tpm2-abrmd_root_configuration.txt* file:
+> ```
+> sudo nano /etc/systemd/system/tpm2-abrmd.service
+> sudo systemctl daemon-reload
+> sudo systemct start tpm2-abrmd
+> sudo systemct enable tpm2-abrmd
+> sudo systemctl status tpm2-abrmd
+> ```
+
+
+
 
 ## Clevis
 # Dependencies
