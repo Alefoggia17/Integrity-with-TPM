@@ -346,7 +346,7 @@ also now start the daemon when the system boots.
 > ```
 
 ## Clevis
-# Dependencies
+### Dependencies
 To build and install the Clevis software the following software packages
 are required: 
 * Meson
