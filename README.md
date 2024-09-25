@@ -79,7 +79,7 @@ $ sudo usermod -aG tss tss #use root if you are root
 $ sudo ldconfig
 ```
 
-##TPM-tools
+## TPM-tools
 ### Dependencies
 To build and install the tpm2-tools software the following software is required:
 * GNU Autoconf (version >= 2019.01.06)
