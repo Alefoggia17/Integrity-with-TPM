@@ -2,9 +2,16 @@
 
 This repository shows how to use the Trusted Platform Module (TPM) to ensure the integrity of data, files, etc. on a Debian 10 virtual machine managed via VirtualBox. The choice of VirtualBox is motivated by the possibility of simulating the TPM.
 
-## Configuration
-
-To simulate the TPM, you must enable the TPM option in the VM settings. As part of this work, we will also be using SecureBoot, so you will also need to enable the "Enable EFI" option. Once the virtual machine has been created, it is necessary to install all the tools related to the TPM.
+## Setup
+The procedure described here was tested using Debian 10.13.0-amd64 on a virtual machine created with VirtualBox version 7. It is important to use the latest version of VirtualBox because it allows you to emulate a TPM module. When creating a new virtual machine, VirtualBox requires preliminary information. In this phase it is necessary to select the *Abilita EFI* flag.
+After carrying out these first configurations, you need to open the VM settings and under the *System* item, enable Secure Boot and select the TPM version to use.
+At this point you can proceed with the installation of Debian. During installation it is important to configure disk encryption, which is essential for integrating the TPM into the Secure Boot process. In this case, the disk was manually partitioned and six partitions were created: 
+* **ESP:** .
+* **boot:** .
+* **root (/):**.
+* **home:**.
+* **secrets:**.
+* **swap:** swap area.
 
 ## TPM-tss
 ### Dependencies
