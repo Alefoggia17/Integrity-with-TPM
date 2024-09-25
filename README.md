@@ -9,10 +9,10 @@ At this point you can proceed with the installation of Debian. During installati
 
 * **ESP** 
 * **boot** 
-* **root (/):**
+* **root (/)**
 * **home**
-* **secrets**.
-* **swap** swap area.
+* **secrets**
+* **swap**
 
 ## TPM-tss
 ### Dependencies
