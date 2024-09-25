@@ -354,6 +354,7 @@ also now start the daemon when the system boots.
 > ```
 
 ## Clevis
+Clevis is a pluggable framework for automated decryption. It can be used to provide automated decryption of data or even automated unlocking of LUKS volumes.
 ### Dependencies
 To build and install the Clevis software the following software packages
 are required: 
@@ -390,17 +391,13 @@ $ sudo apt -y install meson ninja-build build-essential libjose-dev libaudit-dev
 ### Building
 To configure Clevis, run `meson` which generates the build files:
 ```
-$ meson build
-```
-**Compiling**
-Then compile the code using `ninja`:
-```
-$ ninja -C build -j$(nproc)
-```
-**Installing**
-Once you've built the Clevis software it can be installed with:
-```
-$ sudo ninja -C build install
+$ wget https://github.com/latchset/clevis/releases/download/v19/clevis-19.tar.xz
+$ tar Jxvf clevis-19.tar.xz
+$ cd clevis-19
+$ mkdir build
+$ cd build
+$ meson setup ..
+$ ninja
 ```
 **Dracut**
 After is installed, the dracut and systemd hooks can be added to the
