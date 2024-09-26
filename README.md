@@ -157,12 +157,11 @@ required:
 * libtss2-sys, libtss2-mu and TCTI libraries from https://github.com/tpm2-software/tpm2-tss
 * dbus
 
-**NOTE**: Different GNU/Linux distros package glib-2.0 differently and so
-additional packages may be required. The tabrmd requires the GObject and
-GIO D-Bus support from glib-2.0 so please be sure you have whatever packages
-your distro provides are installed for these features.
+> [!NOTE]
+> Different GNU/Linux distros package glib-2.0 differently and so additional packages may be required. The tabrmd requires the GObject and GIO D-Bus support from glib-2.0 so please be sure you have whatever packages your distro provides are installed for these features.
 
-**System User & Group** 
+**System User & Group**
+
 `tpm2-abrmd` must run as user `tss` or `root`.
 As is common security practice we encourage *everyone* to run the `tpm2-abrmd`
 as an unprivileged user. This requires creating a user account and group to
@@ -183,6 +182,7 @@ option.
 
 
 **Obtaining the Source Code**
+
 As is always the case, you should check for packages available through your
 Linux distro before you attempt to download and build the tpm2-abrmd from
 source code directly. If you need a newer version than provided by your
@@ -205,6 +205,7 @@ from the project's git repository. Building from git requires some additional
 work to "bootstrap" the autotools machinery. 
 
 **Configure the Build**
+
 The source code for must be configured before the tpm2-abrmd can be built. In
 the most simple case you may run the `configure script without any options:
 
@@ -213,6 +214,7 @@ script will exit with a status code of `0`. Otherwise an error code will be
 returned.
 
 **Custom `./configure` Options**
+
 In many cases you'll need to provide the `./configure` script with additional
 information about your environment. Typically you'll either be telling the
 script about some location to install a component, or you'll be instructing
@@ -226,6 +228,7 @@ The default values for GNU installation directories are documented here:
 https://www.gnu.org/prep/standards/html_node/Directory-Variables.html
 
 **D-Bus Policy: `--with-dbuspolicydir`**
+
 The `tpm2-abrmd` claims a name on the D-Bus system bus. This requires policy
 to allow the `tss` user account to claim this name. By default the build
 installs this configuration file to `${sysconfdir}/dbus-1/system.d`. We allow
@@ -239,11 +242,13 @@ following configure option:
 ```
 
 **Systemd**
+
 In most configurations the `tpm2-abrmd` daemon should be started as part of
 the boot process. To enable this we provide a systemd unit as well as a
 systemd preset file.
 
 **Systemd Uint: `--with-systemdsystemunitdir`**
+
 By default the build installs this file to `${libdir}/systemd/system. Just
 like D-Bus the location of unit files is distro specific and so you may need
 to configure the build to install this file in the appropriate location.
@@ -255,6 +260,7 @@ systemd unit in the right location with the following configure option:
 ```
 
 **Systemd Preset Dir: `--with-systemdpresetdir=DIR`**
+
 By default the build installs the systemd preset file for the tabrmd to
 `${libdir}/systemd/system-preset`. If you need to install this file to a
 different directory pass the desired path to the `configure` script using this
@@ -264,6 +270,7 @@ option. For example:
 ```
 
 **Systemd Preset Default: `--with-systemdpresetdisable`**
+
 The systemd preset file will enable the tabrmd by default, causing it to be
 started by systemd on boot. If you wish for the daemon to be disabled by
 default some reason you may use this option to the `configure` script to do
@@ -271,6 +278,7 @@ so.
 
 
 **`--datarootdir`**
+
 To override the system data directory, used for
 ${datadir}/dbus-1/system-services/com.intel.tss2.Tabrmd.service,
 use the `--datarootdir` option.
@@ -302,15 +310,16 @@ bindings before executing a program that links against the tabrmd library:
 > ```
 
 **Post-install**
+
 After installing the compiled software and configuration all components with
 new configuration (Systemd and D-Bus) must be prompted to reload their configs.
 This can be accomplished by restarting your system but this isn't strictly
 necessary and is generally considered bad form.
-
 Instead each component can be instructed to reload its config manually. The
 following sections describe this process for each.
 
 **D-Bus**
+
 The dbus-daemon will also need to be instructed to read this configuration
 file (assuming it's installed in a location consulted by dbus-daemon) before
 the policy will be in effect. This is typically accomplished by sending the
@@ -320,6 +329,7 @@ $ sudo pkill -HUP dbus-daemon
 ```
 
 **Systemd**
+
 Assuming that the `tpm2-abrmd` unit was installed in the correct location for
 your distro Systemd must be instructed to reload it's configuration. This is
 accomplished with the following command:
