@@ -364,34 +364,34 @@ also now start the daemon when the system boots.
 > ```
 
 ## Use TPM without Clevis
-Dopo aver installato manualmente tutto ciò che ci serve, è arrivato il momento di utilizzare il TPM versione 2.0 per la cifratura di dati o applicativi per garantirne l'integrità. In particolare, considereremo 3 diversi scenari di utilizzo del TPM:
-* Comunicazione diretta col TPM con possibili variazioni
-* Utilizzo di Tripwire con il TPM
-* Utilizzo di IMA (Integrity Measurement Architecture) con il TPM.
+After manually installing everything we need, the time has come to use the TPM version 2.0 for data or application encryption to guarantee their integrity. In particular, we will consider 3 different TPM usage scenarios:
+* Direct communication with the TPM with possible variations
+* Using Tripwire with the TPM
+* Using IMA (Integrity Measurement Architecture) with the TPM.
 
 ### First Scenario
-Il primo scenario consiste nella creazione di un semplice script bash che verrè cifrato utilizzando il TPM, o nello specifico *tpm2-tools*.
-Quindi creiamo lo script, lo cifriamo e lo decifriamo al momento dell'esecuzione.
-*Creazione dello script*:
+The first scenario consists of creating a simple bash script that will be encrypted using the TPM, or specifically *tpm2-tools*.
+We then create the script, encrypt it, and decrypt it at execution time.
+*Creating the script*
 > ```
 > echo '#!/bin/bash' > tpm_app.sh
 > echo 'echo "Script protetto dal TPM!"' >> tpm_app.sh
 > chmod +x tpm_app.sh
 > ```
-*Creazione del contesto (root key del TPM)*:
+*Creating the context (TPM root key)*
 > ```
 > tpm2_createprmary -C o -c context.ctx 
 > ```
-*Creazione di una chiave AES-256 generata e gestita direttamente dal TPM*:
+*Creation of an AES-256 key generated and managed directly by the TPM*
 > ```
 > tpm2_create -G aes256 -u key.pub -r key.priv -C context.ctx -c aes_key.ctx
 > ```
-*Cifratura e Decifratura dello script con la chiave AES-256*:
+*Encryption and Decryption of the script with the AES-256 key*
 > ```
 > tpm2_encryptdecrypt -c aes_key.ctx -o tpm_app.sh.enc tpm_app.sh
 > tpm2_encryptdecrypt -c aes_key.ctx -d -o tpm_app.sh.dec tpm_app.sh.enc
 > ```
-*Esecuzione dello script post decifratura*:
+*Running the script after the decryption*
 > ```
 > chmod +x tpm_app.sh.dec
 > ./tpm_app.sh.dec
@@ -399,7 +399,7 @@ Quindi creiamo lo script, lo cifriamo e lo decifriamo al momento dell'esecuzione
 > ```
 
 >[!CAUTION]
-> Se si dovesse riscontrare un errore del tipo **Invalid object key authorization** è possibile risolvere il problema inserendo una password di autenticazione:
+> If you encounter an error like **Invalid object key authorization** you can resolve the problem by entering an authentication password:
 > ```
 > tpm2_create -G aes256 -u key.pub -r key.priv -C context.ctx -c aes_key.ctx -p ""
 > tpm2_encryptdecrypt -c aes_key.ctx -o tpm_app.sh.enc tpm_app.sh -p ""
@@ -407,7 +407,7 @@ Quindi creiamo lo script, lo cifriamo e lo decifriamo al momento dell'esecuzione
 > ```
 
 >[!NOTE]
-> Nella creazione della chiava, è possibile anche specificare i valori delle PCR con i quali sigillare la chiave con l'opzione *-L pcrs.ctx*
+> When creating the key, it is also possible to specify the PCR values ​​with which to seal the key with the *-L pcrs.ctx* option.
 
 ### Second Scenario
 ### Third Scenario
