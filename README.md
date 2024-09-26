@@ -353,6 +353,55 @@ also now start the daemon when the system boots.
 > sudo systemctl status tpm2-abrmd
 > ```
 
+## Use TPM without Clevis
+Dopo aver installato manualmente tutto ciò che ci serve, è arrivato il momento di utilizzare il TPM versione 2.0 per la cifratura di dati o applicativi per garantirne l'integrità. In particolare, considereremo 3 diversi scenari di utilizzo del TPM:
+* Comunicazione diretta col TPM con possibili variazioni
+* Utilizzo di Tripwire con il TPM
+* Utilizzo di IMA (Integrity Measurement Architecture) con il TPM.
+
+### First Scenario
+Il primo scenario consiste nella creazione di un semplice script bash che verrè cifrato utilizzando il TPM, o nello specifico *tpm2-tools*.
+Quindi creiamo lo script, lo cifriamo e lo decifriamo al momento dell'esecuzione.
+*Creazione dello script*:
+> ```
+> echo '#!/bin/bash' > tpm_app.sh
+> echo 'echo "Script protetto dal TPM!"' >> tpm_app.sh
+> chmod +x tpm_app.sh
+> ```
+*Creazione del contesto (root key del TPM)*:
+> ```
+> tpm2_createprmary -C o -c context.ctx 
+> ```
+*Creazione di una chiave AES-256 generata e gestita direttamente dal TPM*:
+> ```
+> tpm2_create -G aes256 -u key.pub -r key.priv -C context.ctx -c aes_key.ctx
+> ```
+*Cifratura e Decifratura dello script con la chiave AES-256*:
+> ```
+> tpm2_encryptdecrypt -c aes_key.ctx -o tpm_app.sh.enc tpm_app.sh
+> tpm2_encryptdecrypt -c aes_key.ctx -d -o tpm_app.sh.dec tpm_app.sh.enc
+> ```
+*Esecuzione dello script post decifratura*:
+> ```
+> chmod +x tpm_app.sh.dec
+> ./tpm_app.sh.dec
+> shred -u tpm_app.sh.dec
+> ```
+
+>[!CAUTION]
+> Se si dovesse riscontrare un errore del tipo **Invalid object key authorization** è possibile risolvere il problema inserendo una password di autenticazione:
+> ```
+> tpm2_create -G aes256 -u key.pub -r key.priv -C context.ctx -c aes_key.ctx -p ""
+> tpm2_encryptdecrypt -c aes_key.ctx -o tpm_app.sh.enc tpm_app.sh -p ""
+> tpm2_encryptdecrypt -c aes_key.ctx -d -o tpm_app.sh.dec tpm_app.sh.enc -p ""
+> ```
+
+>[!NOTE]
+> Nella creazione della chiava, è possibile anche specificare i valori delle PCR con i quali sigillare la chiave con l'opzione *-L pcrs.ctx*
+
+### Second Scenario
+### Third Scenario
+
 ## Clevis
 Clevis is a pluggable framework for automated decryption. It can be used to provide automated decryption of data or even automated unlocking of LUKS volumes.
 ### Dependencies
