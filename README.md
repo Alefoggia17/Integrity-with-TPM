@@ -409,6 +409,17 @@ We then create the script, encrypt it, and decrypt it at execution time.
 > When creating the key, it is also possible to specify the PCR values ​​with which to seal the key with the *-L pcrs.ctx* option.
 
 ### Second Scenario
+The second scenario consists of using TPM with Tripwire for integrity monitoring.
+#### Tripwire
+Tripwire is a security tool that allows you to monitor changes made to files and directories compared to a secure baseline state. In this scenario, it is applied to the root partition.
+
+Tripwire uses a policy file where the rules that establish which objects must be controlled and how are indicated. Based on these policies, Tripwire calculates a snapshot of the system when it is in a safe state, storing a set of information relating to each object (file and directory) that we want to protect from possible tampering. This is possible through the use of hash functions. This photograph is stored in a special file (system file database).
+
+When the integrity check is performed, a new snapshot of the system is calculated and compared to the one stored in the database. The result of this comparison is a report file which highlights all the changes that have been made to the system compared to the safe state. At this point it is up to the administrator to establish whether the changes are harmful to the system or not, and to take the necessary countermeasures. Tripwire can be configured to send an email to the system administrator in the event of security-critical changes.
+
+To protect against unauthorized modifications, Tripwire stores its most important files (database, policies and configuration) in an internal binary format and then applies a digital signature to them. In particular, Tripwire uses two key files: site key and local key (each of which is generated via the twadmin command and contains a public/private key pair). The first is used to sign the configuration file and the policy file; the other is used to sign the database. Consequently, modifying or replacing the aforementioned files requires knowledge of the private key, which is encrypted with a passphrase generated during installation.
+
+
 ### Third Scenario
 
 ## Clevis
