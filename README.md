@@ -412,6 +412,7 @@ We then create the script, encrypt it, and decrypt it at execution time.
 The second scenario consists of using TPM with Tripwire for integrity monitoring.
 #### Tripwire
 Tripwire is a security tool that allows you to monitor changes made to files and directories compared to a secure baseline state. In this scenario, it is applied to the root partition.
+![Tripwire_workflow](tripwire_workflow.png)
 
 Tripwire uses a policy file where the rules that establish which objects must be controlled and how are indicated. Based on these policies, Tripwire calculates a snapshot of the system when it is in a safe state, storing a set of information relating to each object (file and directory) that we want to protect from possible tampering. This is possible through the use of hash functions. This photograph is stored in a special file (system file database).
 
@@ -419,6 +420,71 @@ When the integrity check is performed, a new snapshot of the system is calculate
 
 To protect against unauthorized modifications, Tripwire stores its most important files (database, policies and configuration) in an internal binary format and then applies a digital signature to them. In particular, Tripwire uses two key files: site key and local key (each of which is generated via the twadmin command and contains a public/private key pair). The first is used to sign the configuration file and the policy file; the other is used to sign the database. Consequently, modifying or replacing the aforementioned files requires knowledge of the private key, which is encrypted with a passphrase generated during installation.
 
+Install Tripwire on Debian 10:
+```
+apt install -y tripwire
+```
+The Tripwire configuration script will start automatically, allowing you to generate the configuration file, the policy file, the site.key and local.key keys and the respective passphrases. The configuration file, policy file, and keys are stored in the */etc/tripwire/* folder. For greater protection, critical Tripwire files have been moved to the boot partition, which will be unmounted after boot and mounted only when necessary (before performing integrity checks or before updates). The *local* and *site* keys and the *tripwire* binary are the only Tripwire objects that need to be protected, as the other files are signed and any alteration to them would be detected.
+
+```
+mkdir /boot/tripwire
+mv /usr/sbin/tripwire /boot/tripwire/tripwire
+mv /etc/tripwire/debian-local.key /boot/tripwire/debian-local.key
+mv /etc/tripwire/site.keu /boot/tripwire/site.key
+```
+It is then necessary to modify the configuration file */etc/tripwire/twcgf.txt* indicating the paths of these files:
+```
+ROOT = /boot/tripwire
+SITEKEYFILE = /boot/tripwire/site.key
+LOCALKEYFILE = /boot/tripwire/debian-local.key
+```
+To make these changes effective execute:
+```
+twadmin --create-cfgfile -S /boot/tripwire/site.key /etc/tripwire/twcfg.txt
+```
+
+Once this is done you can modify the policy file according to your needs. It may be useful to start from the default file which is initially provided both in the format used by tripwire and in text format. The policy file is made up of rules which indicate the complete path of the files or directories you want to monitor and the attributes of these files that interest us. The attributes that Tripwire allows you to monitor are the following:
+
+![Tripwire_properties](tripwire_prop.png)
+
+To simplify things, you can also define variables that indicate which properties to monitor. Some of these variables are present by default and are indicated in the table below.
+
+![Tripwire_variabili](tripwire_var.png)
+
+To use the new policies you need to run the following command, which encodes the file in the format used by Tripwire and signs it with the site key.
+```
+twadmin --create-polfile -S /etc/tripwire/site.key /etc/tripwire/twpol.txt
+```
+
+Then you need to initialize the database:
+```
+/boot/tripwire/tripwire --init
+```
+
+This command creates the database with the data of the files to be monitored. Once this is done, you need to delete the policy file and the configuration file in text format (*twpol.txt* and *twcfg.txt*).
+
+At this point, to check the integrity of the system, all we have to do is execute:
+```
+/boot/tripwire/tripwire --check
+```
+This involves creating a report with all the changes detected. The report is saved in */var/lib/tripwire/report/* and you can read it by running the command:
+```
+twprint --print-report --twrfile /var/lib/tripwire/report/[nome_report]
+```
+
+Finally, it is possible to use the Linux *cron* utility to schedule the execution of a check periodically and completely automatically. To do this, just edit the Linux *crontab* by running and inserting the following lines: 
+```
+crontab -e
+```
+*Lines*:
+```
+@reboot /boot/tripwire/tripwire --check
+@reboot sleep 60 && /usr/bin/umount /dev/sda1 && /usr/bin/umount /dev/sda2
+0 5 * * * /usr/bin/mount /dev/sda2 && /boot/tripwire/tripwire --check
+2 5 * * * /usr/bin/umount /dev/sda2
+```
+
+In this case, an integrity check was configured after each reboot and every day at 05:00 in the morning. Furthermore, cron is also used to manage the mount and umount of the boot partition.
 
 ### Third Scenario
 
