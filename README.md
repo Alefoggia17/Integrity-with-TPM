@@ -344,7 +344,7 @@ also now start the daemon when the system boots.
 > ```
 > sudo nano /etc/systemd/system/tpm2-abrmd.service
 > ```
-> Control where tpm2-abrmd binary is with the command *which tpm2-abrmd*. Copy the *tpm2-abrmd_configuration.txt* file.
+> Control where tpm2-abrmd binary is with the command *which tpm2-abrmd*. Then copy the *tpm2-abrmd_configuration.txt* file.
 > ```
 > sudo systemctl daemon-reload
 > sudo systemct start tpm2-abrmd
