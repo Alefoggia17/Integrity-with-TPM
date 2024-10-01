@@ -433,11 +433,15 @@ mv /usr/sbin/tripwire /boot/tripwire/tripwire
 mv /etc/tripwire/debian-local.key /boot/tripwire/debian-local.key
 mv /etc/tripwire/site.key /boot/tripwire/site.key
 ```
-It is then necessary to modify the configuration file */etc/tripwire/twcgf.txt* indicating the paths of these files:
+It is then necessary to modify the configuration file */etc/tripwire/twcfg.txt* indicating the paths of these files:
 ```
 ROOT = /boot/tripwire
+POLFILE = /etc/tripwire/tw.pol
+DBFILE = /var/lib/tripwire/$(HOSTNAME).twd
+REPORTFILE = /var/lib/tripwire/report/$(HOSTNAME)-$(DATE).twr
 SITEKEYFILE = /boot/tripwire/site.key
 LOCALKEYFILE = /boot/tripwire/debian-local.key
+EDITOR = /bin/nano
 ```
 To make these changes effective execute:
 ```
