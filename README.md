@@ -116,7 +116,7 @@ To build and install the tpm2-tools software the following software is required:
 
 *Code to install dependencies*:
 ```
-$ sudo apt-get install autoconf automake libtool pkg-config gcc libssl-dev libcurl4-gnutls-dev python-yaml
+$ sudo apt-get install autoconf automake libtool pkg-config gcc libssl-dev libcurl4-gnutls-dev python-yaml libglib2.0-dev
 ```
 
 #### Typical Distro Dependency Installation
@@ -293,7 +293,6 @@ $ git clone https://github.com/tpm2-software/tpm2-abrmd.git
 $ cd tpm2-abrmd
 $ ./bootstrap
 $ ./configure --with-dbuspolicydir=/etc/dbus-1/system.d
---with-udevrulesdir=/usr/lib/udev/rules.d
 --with-systemdsystemunitdir=/usr/lib/systemd/system
 --libdir=/usr/lib64 --prefix=/usr/local
 $ make -j5
