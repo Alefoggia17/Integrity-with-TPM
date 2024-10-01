@@ -379,7 +379,7 @@ We then create the script, encrypt it, and decrypt it at execution time.
 > ```
 *Creating the context (TPM root key)*
 > ```
-> tpm2_createprmary -C o -c context.ctx 
+> tpm2_createprimary -C o -c context.ctx 
 > ```
 *Creation of an AES-256 key generated and managed directly by the TPM*
 > ```
