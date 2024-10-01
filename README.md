@@ -458,7 +458,7 @@ To simplify things, you can also define variables that indicate which properties
 
 To use the new policies you need to run the following command, which encodes the file in the format used by Tripwire and signs it with the site key.
 ```
-twadmin --create-polfile -S /etc/tripwire/site.key /etc/tripwire/twpol.txt
+twadmin --create-polfile -S /boot/tripwire/site.key /etc/tripwire/twpol.txt
 ```
 
 Then you need to initialize the database:
