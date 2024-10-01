@@ -412,6 +412,7 @@ We then create the script, encrypt it, and decrypt it at execution time.
 The second scenario consists of using TPM with Tripwire for integrity monitoring.
 #### Tripwire
 Tripwire is a security tool that allows you to monitor changes made to files and directories compared to a secure baseline state. In this scenario, it is applied to the root partition.
+
 ![Tripwire_workflow](tripwire_workflow.png)
 
 Tripwire uses a policy file where the rules that establish which objects must be controlled and how are indicated. Based on these policies, Tripwire calculates a snapshot of the system when it is in a safe state, storing a set of information relating to each object (file and directory) that we want to protect from possible tampering. This is possible through the use of hash functions. This photograph is stored in a special file (system file database).
