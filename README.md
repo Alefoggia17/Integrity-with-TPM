@@ -431,7 +431,7 @@ The Tripwire configuration script will start automatically, allowing you to gene
 mkdir /boot/tripwire
 mv /usr/sbin/tripwire /boot/tripwire/tripwire
 mv /etc/tripwire/debian-local.key /boot/tripwire/debian-local.key
-mv /etc/tripwire/site.keu /boot/tripwire/site.key
+mv /etc/tripwire/site.key /boot/tripwire/site.key
 ```
 It is then necessary to modify the configuration file */etc/tripwire/twcgf.txt* indicating the paths of these files:
 ```
