@@ -425,25 +425,9 @@ Install Tripwire on Debian 10:
 ```
 apt install -y tripwire
 ```
-The Tripwire configuration script will start automatically, allowing you to generate the configuration file, the policy file, the site.key and local.key keys and the respective passphrases. The configuration file, policy file, and keys are stored in the */etc/tripwire/* folder. For greater protection, critical Tripwire files have been moved to the boot partition, which will be unmounted after boot and mounted only when necessary (before performing integrity checks or before updates). The *local* and *site* keys and the *tripwire* binary are the only Tripwire objects that need to be protected, as the other files are signed and any alteration to them would be detected.
+The Tripwire configuration script will start automatically, allowing you to generate the configuration file, the policy file, the site.key and local.key keys and the respective passphrases. The configuration file, policy file, and keys are stored in the */etc/tripwire/* folder. The *local* and *site* keys are signed with the passphrase chosen during the installation. The *tripwire* binary is the only Tripwire object that needs to be protected, and so you could use TPM. If you want modify the paths of Tripwire files, it is then necessary to modify the configuration file */etc/tripwire/twcfg.txt*.
+Then, to make these changes effective execute:
 
-```
-mkdir /boot/tripwire
-mv /usr/sbin/tripwire /boot/tripwire/tripwire
-mv /etc/tripwire/debian-local.key /boot/tripwire/debian-local.key
-mv /etc/tripwire/site.key /boot/tripwire/site.key
-```
-It is then necessary to modify the configuration file */etc/tripwire/twcfg.txt* indicating the paths of these files:
-```
-ROOT = /boot/tripwire
-POLFILE = /etc/tripwire/tw.pol
-DBFILE = /var/lib/tripwire/$(HOSTNAME).twd
-REPORTFILE = /var/lib/tripwire/report/$(HOSTNAME)-$(DATE).twr
-SITEKEYFILE = /boot/tripwire/site.key
-LOCALKEYFILE = /boot/tripwire/debian-local.key
-EDITOR = /bin/nano
-```
-To make these changes effective execute:
 ```
 twadmin --create-cfgfile -S /boot/tripwire/site.key /etc/tripwire/twcfg.txt
 ```
@@ -458,24 +442,25 @@ To simplify things, you can also define variables that indicate which properties
 
 To use the new policies you need to run the following command, which encodes the file in the format used by Tripwire and signs it with the site key.
 ```
-twadmin --create-polfile -S /boot/tripwire/site.key /etc/tripwire/twpol.txt
+twadmin --create-polfile -S /etc/tripwire/site.key /etc/tripwire/twpol.txt
 ```
 
 Then you need to initialize the database:
 ```
-/boot/tripwire/tripwire --init
+/etc/tripwire/tripwire --init
 ```
 
 This command creates the database with the data of the files to be monitored. Once this is done, you need to delete the policy file and the configuration file in text format (*twpol.txt* and *twcfg.txt*).
 
 At this point, to check the integrity of the system, all we have to do is execute:
 ```
-/boot/tripwire/tripwire --check
+/etc/tripwire/tripwire --check
 ```
 This involves creating a report with all the changes detected. The report is saved in */var/lib/tripwire/report/* and you can read it by running the command:
 ```
 twprint --print-report --twrfile /var/lib/tripwire/report/[nome_report]
 ```
+As mentioned above, it is possible to encrypt the *Tripwire* binary with the TPM by following exactly the same steps as in the first scenario.
 
 Finally, it is possible to use the Linux *cron* utility to schedule the execution of a check periodically and completely automatically. To do this, just edit the Linux *crontab* by running and inserting the following lines: 
 ```
@@ -483,12 +468,11 @@ crontab -e
 ```
 *Lines*:
 ```
-@reboot /boot/tripwire/tripwire --check
+@reboot /etc/tripwire/tripwire --check
 @reboot sleep 60 && /usr/bin/umount /dev/sda1 && /usr/bin/umount /dev/sda2
-0 5 * * * /usr/bin/mount /dev/sda2 && /boot/tripwire/tripwire --check
+0 5 * * * /usr/bin/mount /dev/sda2 && /etc/tripwire/tripwire --check
 2 5 * * * /usr/bin/umount /dev/sda2
 ```
-
 In this case, an integrity check was configured after each reboot and every day at 05:00 in the morning. Furthermore, cron is also used to manage the mount and umount of the boot partition.
 
 ### Third Scenario
