@@ -429,7 +429,7 @@ The Tripwire configuration script will start automatically, allowing you to gene
 Then, to make these changes effective execute:
 
 ```
-twadmin --create-cfgfile -S /boot/tripwire/site.key /etc/tripwire/twcfg.txt
+twadmin --create-cfgfile -S /etc/tripwire/site.key /etc/tripwire/twcfg.txt
 ```
 
 Once this is done you can modify the policy file according to your needs. It may be useful to start from the default file which is initially provided both in the format used by tripwire and in text format. The policy file is made up of rules which indicate the complete path of the files or directories you want to monitor and the attributes of these files that interest us. The attributes that Tripwire allows you to monitor are the following:
