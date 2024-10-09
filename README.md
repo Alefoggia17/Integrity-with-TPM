@@ -462,6 +462,38 @@ twprint --print-report --twrfile /var/lib/tripwire/report/[nome_report]
 ```
 As mentioned above, it is possible to encrypt the *Tripwire* binary with the TPM by following exactly the same steps as in the first scenario.
 
+>[!WARNING]
+> When installing Tripwire, you can choose manual setup. This involves manually creating the configuration file, policy file and database, as well as the "local" and "site" keys. Manual configuration can be useful, for example, if you do not want to encrypt any data (an action recommended and performed automatically by Tripwire). You can choose an empty passphrase and therefore not encrypt the local and site keys. These keys can be encrypted via the TPM, for example.
+
+Creating the key file: 
+```
+twadmin --generate-keys -L /etc/tripwire/$(HOSTNAME)-local.key -S /etc/tripwire/site.key  -P passphrase -Q passphrase
+```
+
+Then you need to create a configuration file:
+```
+twadmin --create-cfgfile -S /etc/tripwire/site.key -Q passphrase twcfg.txt
+```
+
+Then you need to create a policy file:
+```
+twadmin --create-polfile -S /etc/tripwire/site.key -Q passphrase twcfg.txt
+```
+Printing or Manipulating File:
+```
+ twadmin --print-polfile -p polfile [-c cfgfile -S site-key-file]
+```
+```
+twadmin --examine [-c cfgfile -L local-key-file -S site-key-file] file1 file2 ...
+```
+To encrypt or unencrypt:
+```
+ twadmin --encrypt [-c cfgfile -L local-key-file -S site-key-file -P passphrase -Q passphrase] file1 file2 ...
+```
+```
+twadmin --remove-encryption [-c cfgfile -L local-key-file -S site-key-file -P passphrase -Q passphrase] file1 file2 ...
+```
+You can find the complete documentation [here](https://www.cs.montana.edu/courses/309/topics/11-security/tripwire_discussion.html).
 Finally, it is possible to use the Linux *cron* utility to schedule the execution of a check periodically and completely automatically. To do this, just edit the Linux *crontab* by running and inserting the following lines: 
 ```
 crontab -e
