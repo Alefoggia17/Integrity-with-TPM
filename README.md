@@ -447,14 +447,14 @@ twadmin --create-polfile -S /etc/tripwire/site.key /etc/tripwire/twpol.txt
 
 Then you need to initialize the database:
 ```
-/usr/sbin/tripwire/ --init
+/usr/sbin/tripwire --init
 ```
 
 This command creates the database with the data of the files to be monitored. Once this is done, you need to delete the policy file and the configuration file in text format (*twpol.txt* and *twcfg.txt*).
 
 At this point, to check the integrity of the system, all we have to do is execute:
 ```
-/etc/tripwire/tripwire --check
+/usr/sbin/tripwire --check
 ```
 This involves creating a report with all the changes detected. The report is saved in */var/lib/tripwire/report/* and you can read it by running the command:
 ```
