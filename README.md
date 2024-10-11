@@ -447,7 +447,7 @@ twadmin --create-polfile -S /etc/tripwire/site.key /etc/tripwire/twpol.txt
 
 Then you need to initialize the database:
 ```
-/etc/tripwire/tripwire --init
+/usr/sbin/tripwire/ --init
 ```
 
 This command creates the database with the data of the files to be monitored. Once this is done, you need to delete the policy file and the configuration file in text format (*twpol.txt* and *twcfg.txt*).
