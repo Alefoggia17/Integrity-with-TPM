@@ -460,7 +460,10 @@ This involves creating a report with all the changes detected. The report is sav
 ```
 twprint --print-report --twrfile /var/lib/tripwire/report/[nome_report]
 ```
-As mentioned above, it is possible to encrypt the *Tripwire* binary with the TPM by following exactly the same steps as in the first scenario.
+As mentioned above, it is possible to encrypt the *Tripwire* binary with the TPM by following exactly the same steps as in the first scenario. 
+
+>[!IMPORTANT]
+> To test how Tripwire works, for example, you can edit a file within the */etc* directory after the database has been initialized. Looking at the report, a section called **Modify Objects** will appear, with a warning about the modification occurred.
 
 >[!WARNING]
 > When installing Tripwire, you can choose manual setup. This involves manually creating the configuration file, policy file and database, as well as the "local" and "site" keys. Manual configuration can be useful, for example, if you do not want to encrypt any data (an action recommended and performed automatically by Tripwire). You can choose an empty passphrase and therefore not encrypt the local and site keys. These keys can be encrypted via the TPM, for example.
