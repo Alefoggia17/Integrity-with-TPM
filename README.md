@@ -363,10 +363,9 @@ also now start the daemon when the system boots.
 > ```
 
 ## Use TPM without Clevis
-After manually installing everything we need, the time has come to use the TPM version 2.0 for data or application encryption to guarantee their integrity. In particular, we will consider 3 different TPM usage scenarios:
+After manually installing everything we need, the time has come to use the TPM version 2.0 for data or application encryption to guarantee their integrity. In particular, we will consider 2 different TPM usage scenarios:
 * Direct communication with the TPM with possible variations
-* Using Tripwire with the TPM
-* Using IMA (Integrity Measurement Architecture) with the TPM.
+* Using Tripwire with TPM
 
 ### First Scenario
 The first scenario consists of creating a simple bash script that will be encrypted using the TPM, or specifically *tpm2-tools*.
@@ -421,7 +420,7 @@ When the integrity check is performed, a new snapshot of the system is calculate
 
 To protect against unauthorized modifications, Tripwire stores its most important files (database, policies and configuration) in an internal binary format and then applies a digital signature to them. In particular, Tripwire uses two key files: site key and local key (each of which is generated via the twadmin command and contains a public/private key pair). The first is used to sign the configuration file and the policy file; the other is used to sign the database. Consequently, modifying or replacing the aforementioned files requires knowledge of the private key, which is encrypted with a passphrase generated during installation.
 
-Install Tripwire on Debian 10:
+#### Installing Tripwire on Debian 10:
 ```
 apt install -y tripwire
 ```
@@ -460,13 +459,56 @@ This involves creating a report with all the changes detected. The report is sav
 ```
 twprint --print-report --twrfile /var/lib/tripwire/report/[nome_report]
 ```
-As mentioned above, it is possible to encrypt the *Tripwire* binary with the TPM by following exactly the same steps as in the first scenario. 
-
 >[!IMPORTANT]
 > To test how Tripwire works, for example, you can edit a file within the */etc* directory after the database has been initialized. Looking at the report, a section called **Modify Objects** will appear, with a warning about the modification occurred.
 
+
+#### Using TPM
+
+It is possible to encrypt the *local* and *site* keys with the TPM. A hybrid solution will be used: instead of directly encrypting the entire contents of the Tripwire keys, the TPM will be used to encrypt an AES key which will then be used to encrypt and decrypt the rest of the data. The AES key will be protected by a TPM RSA key.
+
+Code:
+
+```
+openssl rand -out aes_key.bin 32
+```
+```
+openssl enc -aes-256-cbc -pbkdf12 -in /etc/tripwire/site.key -out /etc/tripwire/site.key.enc -pass file:./aes_key.bin
+```
+```
+tpm2_rsaencrypt -c primary.ctx < aes_key.bin > aes_key.bin.enc
+```
+```
+tpm2_rsadecrypt -c primary.ctx < aes_key.bin.enc > aes_key.bin
+```
+```
+openssl enc -d -aes-256-cbc -in /etc/tripwire/site.key.enc -out /etc/tripwire/site.key -pass file:./aes_key.bin
+```
+```
+shred -u aes_key.bin
+```
+
+
+>[!NOTE]
+> It is possible to use a TPM AES key rather than an RSA key and use a direct encryption method. In this scenario, it is necessary to compute a hash of the file.
+> ```
+> sha256sum /etc/tripwire/site.key > /etc/tripwire/site.key.hash
+> ```
+> ```
+> tpm2_createprimary -C o -c primary.ctx
+> tpm2_create -C primary.ctx -G aes -u aes.pub -r aes.priv -c aes.ctx
+> ```
+> ```
+> hash=$(cat /etc/tripwire/site.key.hash
+> tpm2_encryptdecrypt --cphash $hash -c aes.ctx -o /etc/tripwire/site.key.enc -i /etc/tripwire/site.key
+> ```
+> ```
+> tpm2_encryptdecrypt -d --cphash $hash -c aes.ctx -o /etc/tripwire/site.key -i /etc/tripwire/site.key.enc
+> ```
+
+
 >[!WARNING]
-> When installing Tripwire, you can choose manual setup. This involves manually creating the configuration file, policy file and database, as well as the "local" and "site" keys. Manual configuration can be useful, for example, if you do not want to encrypt any data (an action recommended and performed automatically by Tripwire). You can choose an empty passphrase and therefore not encrypt the local and site keys. These keys can be encrypted via the TPM, for example.
+> When installing Tripwire, you can choose manual setup. This involves manually creating the configuration file, policy file and database, as well as the "local" and "site" keys. Manual configuration can be useful, for example, if you do not want to encrypt any data (an action recommended and performed automatically by Tripwire). You can choose an empty passphrase and therefore not encrypt the local and site keys. These keys can be encrypted via the TPM, such as mentioned above.
 
 Creating the key file: 
 ```
@@ -497,6 +539,9 @@ To encrypt or unencrypt:
 twadmin --remove-encryption [-c cfgfile -L local-key-file -S site-key-file -P passphrase -Q passphrase] file1 file2 ...
 ```
 You can find the complete documentation [here](https://www.cs.montana.edu/courses/309/topics/11-security/tripwire_discussion.html).
+
+#### Using cron
+
 Finally, it is possible to use the Linux *cron* utility to schedule the execution of a check periodically and completely automatically. To do this, just edit the Linux *crontab* by running and inserting the following lines: 
 ```
 crontab -e
@@ -509,8 +554,6 @@ crontab -e
 2 5 * * * /usr/bin/umount /dev/sda2
 ```
 In this case, an integrity check was configured after each reboot and every day at 05:00 in the morning. Furthermore, cron is also used to manage the mount and umount of the boot partition.
-
-### Third Scenario
 
 ## Clevis
 Clevis is a pluggable framework for automated decryption. It can be used to provide automated decryption of data or even automated unlocking of LUKS volumes.
