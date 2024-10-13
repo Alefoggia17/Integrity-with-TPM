@@ -420,7 +420,7 @@ When the integrity check is performed, a new snapshot of the system is calculate
 
 To protect against unauthorized modifications, Tripwire stores its most important files (database, policies and configuration) in an internal binary format and then applies a digital signature to them. In particular, Tripwire uses two key files: site key and local key (each of which is generated via the twadmin command and contains a public/private key pair). The first is used to sign the configuration file and the policy file; the other is used to sign the database. Consequently, modifying or replacing the aforementioned files requires knowledge of the private key, which is encrypted with a passphrase generated during installation.
 
-#### Installing Tripwire on Debian 10:
+#### **Installing Tripwire on Debian 10**
 ```
 apt install -y tripwire
 ```
@@ -463,7 +463,7 @@ twprint --print-report --twrfile /var/lib/tripwire/report/[nome_report]
 > To test how Tripwire works, for example, you can edit a file within the */etc* directory after the database has been initialized. Looking at the report, a section called **Modify Objects** will appear, with a warning about the modification occurred.
 
 
-#### Using TPM
+#### **Using TPM**
 
 It is possible to encrypt the *local* and *site* keys with the TPM. A hybrid solution will be used: instead of directly encrypting the entire contents of the Tripwire keys, the TPM will be used to encrypt an AES key which will then be used to encrypt and decrypt the rest of the data. The AES key will be protected by a TPM RSA key.
 
@@ -540,7 +540,7 @@ twadmin --remove-encryption [-c cfgfile -L local-key-file -S site-key-file -P pa
 ```
 You can find the complete documentation [here](https://www.cs.montana.edu/courses/309/topics/11-security/tripwire_discussion.html).
 
-#### Using cron
+#### **Using cron**
 
 Finally, it is possible to use the Linux *cron* utility to schedule the execution of a check periodically and completely automatically. To do this, just edit the Linux *crontab* by running and inserting the following lines: 
 ```
