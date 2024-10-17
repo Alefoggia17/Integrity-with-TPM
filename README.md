@@ -510,7 +510,7 @@ shred -u aes_key.bin
 > tpm2_create -C primary.ctx -G aes -u aes.pub -r aes.priv -c aes.ctx
 > ```
 > ```
-> hash=$(cat /etc/tripwire/site.key.hash
+> hash=$(cat /etc/tripwire/site.key.hash)
 > tpm2_encryptdecrypt --cphash $hash -c aes.ctx -o /etc/tripwire/site.key.enc -i /etc/tripwire/site.key
 > ```
 > ```
