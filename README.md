@@ -15,6 +15,16 @@ At this point you can proceed with the installation of Debian. In this scenario,
 * **swap**
 
 ## TPM-tss
+Trusted Computing Group's (TCG) TPM2 Software Stack (TSS consists of the following layers from top to bottom:
+| Name | Libraries |  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Specifications |
+|---|---|---|---|
+| Feature API (FAPI) | libtss2&#x2011;fapi | High-level API for simple TPM usage | [TCG Feature API (FAPI) Specification](https://trustedcomputinggroup.org/wp-content/uploads/TSS_FAPI_v0p94_r09_pub.pdf),<br>[TCG TSS 2.0 JSON Data Types and Policy Language Specification](https://trustedcomputinggroup.org/wp-content/uploads/TSS_JSON_Policy_v0p7_r08_pub.pdf) |
+| Enhanced System API (ESAPI,&nbsp;sometimes&nbsp;ESYS) | libtss2&#x2011;esys | 1-to-1 mapping of the TPM2 commands<ul><li> Session handling</li><li>Tracks meta data for TPM objects</li><li>Asynchronous calls</li></ul> | [TCG TSS 2.0 Enhanced System API (ESAPI) Specification](https://trustedcomputinggroup.org/wp-content/uploads/TSS_ESAPI_v1p0_r08_pub.pdf) |
+| System API (SAPI,&nbsp;sometimes&nbsp;SYS) | libtss2&#x2011;sys | 1-to-1 mapping of the TPM2 commands<ul><li>Asynchronous calls</li></ul> | [TCG TSS 2.0 System Level API (SAPI) Specification](https://trustedcomputinggroup.org/wp-content/uploads/TSS_SAPI_v1p1_r29_pub_20190806.pdf) |
+| Marshaling/Unmarshaling (MU) | libtss2&#x2011;mu | (Un)marshaling all data types in the TPM library specification | [TCG TSS 2.0 Marshaling/Unmarshaling API Specification](https://trustedcomputinggroup.org/wp-content/uploads/TCG_TSS_Marshaling_Unmarshaling_API_v1p0_r07_pub.pdf) |
+| TPM Command Transmission Interface (TCTI) | libtss2&#x2011;tcti&#x2011;device<br>libtss2&#x2011;tcti&#x2011;tbs<br> libtss2&#x2011;tctildr<br>libtss2&#x2011;tcti&#x2011;swtpm<br>&#8230; | Standard API to transmit/receive TPM commands and responses<br><br>See [doc/tcti.md](doc/tcti.md) | [TCG TSS 2.0 TPM Command Transmission Interface (TCTI) API Specification](https://trustedcomputinggroup.org/wp-content/uploads/TCG_TSS_TCTI_v1p0_r18_pub.pdf) |
+||| Basis for all implementations in this project. [1] | [TCG TSS 2.0 Overview and Common Structures Specification](https://trustedcomputinggroup.org/wp-content/uploads/TCG_TSS_Overview_Common_Structures_v0.9_r03_published.pdf) |
+
 ### Dependencies
 To build and install the tpm2-tss software the following software packages
 are required: 
@@ -143,6 +153,7 @@ $ tpm2_getrandom --version
 ```
 
 ## TPM-abrmd
+It is a system daemon implementing the TPM2 access broker (TAB) & Resource Manager (RM) spec from the TCG. The daemon (tpm2-abrmd) is implemented using Glib and the GObject system.
 ### Dependencies
 To build and install the tpm2-abrmd software the following dependencies are
 required:
