@@ -471,7 +471,7 @@ This involves creating a report with all the changes detected. The report is sav
 twprint --print-report --twrfile /var/lib/tripwire/report/[nome_report]
 ```
 >[!IMPORTANT]
-> To test how Tripwire works, for example, you can edit a file within the */etc* directory after the database has been initialized. Looking at the report, a section called **Modify Objects** will appear, with a warning about the modification occurred.
+> To test how Tripwire works, you can edit a file within the */etc* directory after the database has been initialized. Looking at the report, a section called **Modify Objects** will appear, with a warning about the modification occurred.
 
 
 #### **Using TPM**
