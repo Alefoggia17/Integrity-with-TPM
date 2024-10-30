@@ -15,7 +15,7 @@ At this point you can proceed with the installation of Debian. In this scenario,
 * **swap**
 
 ## TPM-tss
-Trusted Computing Group's (TCG) TPM2 Software Stack (TSS consists of the following layers from top to bottom:
+Trusted Computing Group's (TCG) TPM2 Software Stack (TSS consists of the following layers from top to bottom):
 | Name | Libraries |  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Specifications |
 |---|---|---|---|
 | Feature API (FAPI) | libtss2&#x2011;fapi | High-level API for simple TPM usage | [TCG Feature API (FAPI) Specification](https://trustedcomputinggroup.org/wp-content/uploads/TSS_FAPI_v0p94_r09_pub.pdf),<br>[TCG TSS 2.0 JSON Data Types and Policy Language Specification](https://trustedcomputinggroup.org/wp-content/uploads/TSS_JSON_Policy_v0p7_r08_pub.pdf) |
